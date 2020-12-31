@@ -16,8 +16,7 @@ class game():
         self.whichGroup = True
         self.scoreGroup1 = 0
         self.scoreGroup2 = 0
-        self.winner = ["", 0]
-        self.loser = ["", 0]
+
 
     def addNewGroup(self, client_name):
         global_variable.globalV.lock_class_game.acquire()
@@ -45,10 +44,10 @@ class game():
         global_variable.globalV.lock_class_game.acquire()
         if (group == "group1"):
             self.scoreGroup1 += types
-            #print(str(self.scoreGroup1))
+
         elif (group == "group2"):
             self.scoreGroup2 += types
-            #print("######"+str(self.scoreGroup2))
+
         global_variable.globalV.lock_class_game.relaese()
 
     def calc_total(self):
@@ -56,12 +55,14 @@ class game():
         last_message += "group 2 get " + str(self.scoreGroup2) + " points.\n"
 
         if self.scoreGroup1 > self.scoreGroup2:
-            last_message += str(self.group1) + "you win the game:\n "
-            last_message += str(self.group2) + "nice try\n"
+            last_message += self.group1 + "you win, yours average types was: " + str(self.scoreGroup1/len(self.group1)) + "\n "
+            last_message += self.group2 + "nice try, yours average types was: "+ str(self.scoreGroup2/len(self.group2)) + "\n "
         elif self.scoreGroup2 > self.scoreGroup1:
-            last_message += str(self.group2) + "you win the game:\n"
-            last_message += str(self.group1) + "nice try\n"
+            last_message += self.group2 + "you win the game:\n"
+            last_message += self.group1 + "nice try\n"
         else:
-            last_message += "Its a tekooooo next time try harder"
+            last_message += "we have a tie, think about tiebreaker....\n"
+            last_message += "we have a tie, think about tiebreaker....\n"
+        last_message += "a little interesting information: the average types for the "
         return last_message
 

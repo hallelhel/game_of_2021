@@ -75,7 +75,7 @@ class threads_client_on_server(threading.Thread):
         #     return
         while (global_variable.globalV.lock_until_end.locked()):
             time.sleep(0.01)
-        val = self.sendScore()
+        val = self.message_score()
         if not val:
             return
 
