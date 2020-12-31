@@ -2,7 +2,7 @@ import socket, threading
 import datetime, time
 import udp_protocol
 import tcp_protocol
-import gobalVariable
+import global_variable
 
 
 class bcolors:
@@ -23,26 +23,25 @@ def Main():
         # global lock_until_end
         # global real_game
 
-        gobalVariable.globalV.lock_msg.acquire()
-        print( gobalVariable.globalV.lock_msg.locked())
-        gobalVariable.globalV.lock_until_end.acquire()
+        global_variable.globalV.lock_msg.acquire()
+        global_variable.globalV.lock_until_end.acquire()
         udpthread = udp_protocol.udp_protocol()
-        print('\033[93m' + "udpThred start" + bcolors.ENDC)
+        #print('\033[93m' + "udpThred start" + bcolors.ENDC)
         udpthread.start()
         tcpthread = tcp_protocol.tcp_protocol()
-        print("tcp thread start")
+        #print("tcp thread start")
         tcpthread.start()
         tcpthread.join(10)
         udpthread.join(10)
-        print("udp/tcp thread finished")
+        #print("udp/tcp thread finished")
         # if (len(all_players) != 0):
         # groupsMsg = game1.getGroupsMsg()
-        gobalVariable.globalV.lock_msg.release()  # start real_game
+        global_variable.globalV.lock_msg.release()  # start real_game
         time.sleep(12)
         print("real_game Finished")
-        gobalVariable.globalV.lock_until_end.release()
+        global_variable.globalV.lock_until_end.release()
         time.sleep(10)
-        gobalVariable.globalV.real_game.goToZero()
+        global_variable.globalV.real_game.goToZero()
 
         # else:
         #     lock_msg.release()
@@ -52,69 +51,66 @@ def Main():
     # reset real_game
 
 
-class ClientThread(threading.Thread):
-    groupName = ""
-    clientname = ""
+class threads_client_on_server(threading.Thread):
+    # groupName = ""
+    # clientname = ""
 
-    def __init__(self, clientAddress, clientsocket):
+    def __init__(self, client_address, client_socket):
         threading.Thread.__init__(self)
-        self.clientAddress = clientAddress
-        self.csocket = clientsocket
+        self.client_address = client_address
+        self.client_socket = client_socket
+        self.group_name = " "
+        self.client_name = " "
 
     def run(self):
-        print("thread start")
-        self.csocket.settimeout(40)  # case no msg recived
-        data = self.csocket.recv(2048)
-        self.clientname = data.decode()
-        self.groupName = gobalVariable.globalV.real_game.addNewGroup(self.clientname)
-        while (gobalVariable.globalV.lock_msg.locked()):
+        self.client_socket.settimeout(40)  # case no msg recived
+        data = self.client_socket.recv(2048)
+        self.client_name = data.decode()
+        self.group_name = global_variable.globalV.real_game.addNewGroup(self.client_name)
+        while (global_variable.globalV.lock_msg.locked()):
             time.sleep(0.01)
-        self.startGameMassge()
+        self.message_to_start()
         # if not val:#player is not playing
         #
         #     return
-        while (gobalVariable.globalV.lock_until_end.locked()):
+        while (global_variable.globalV.lock_until_end.locked()):
             time.sleep(0.01)
         val = self.sendScore()
         if not val:
             return
 
-    def startGameMassge(self):
+    def message_to_start(self):
         try:
-            msg = '\033[95m' + 'Welcome to Keyboard Spamming Battle Royale.\n' + bcolors.ENDC + bcolors.HEADER + bcolors.OKBLUE + bcolors.OKCYAN  + bcolors.ENDC + '\n'
-            # self.csocket.send(msg.encode())
-            # self.csocket.recv(1024)
-            groupsMsg = '\033[94m' + gobalVariable.globalV.real_game.get_group() + bcolors.ENDC
-            # self.csocket.send(groupsMsg.encode())
-            # self.csocket.recv(1024)
-            startMsg = msg + groupsMsg + bcolors.OKGREEN + '\nStart pressing keys on your keyboard as fast as you can!!\n' + bcolors.ENDC
-            self.csocket.send(startMsg.encode())
+            msg = '\033[95m' + 'welcome to the play of 2021.\n' + bcolors.ENDC + bcolors.HEADER + bcolors.OKBLUE + bcolors.OKCYAN  + bcolors.ENDC + '\n'
+            groups_msg = '\033[94m' + global_variable.globalV.real_game.get_group() + bcolors.ENDC
+            start_msg = msg + groups_msg + bcolors.OKGREEN + '\nStart pressing keys on your keyboard as fast as you can!!\n' + bcolors.ENDC
+            self.client_socket.send(start_msg.encode())
 
-            counter_game = 0
+            counter_for_play = 0
             then = datetime.datetime.now() + datetime.timedelta(seconds=10)
             try:
                 while then > datetime.datetime.now():
                     time.sleep(0.01)
-                    self.csocket.settimeout(10)
-                    if self.csocket.recv(1024):
-                        counter_game += 1
+                    self.client_socket.settimeout(10)
+                    if self.client_socket.recv(1024):
+                        counter_for_play += 1
             except:
-                print("server row 112 --- didnt get typing")
+                print("server didnt get typing")
                 return False
-            print(counter_game)
-            print(self.groupName)
-            gobalVariable.globalV.real_game.sumScore(counter_game, self.groupName)
+            print(counter_for_play)
+            print(self.group_name)
+            global_variable.globalV.real_game.sum_score(counter_for_play, self.group_name)
 
         except:
-            print("server row 116 ---client lost connection")
+            print("server client lost connection")
             return False
 
-    def sendScore(self):
+    def message_score(self):
         try:
-            msg = bcolors.WARNING + bcolors.BOLD + gobalVariable.globalV.real_game.calc_total() + bcolors.ENDC
-            self.csocket.send(msg.encode())
+            msg = bcolors.WARNING + bcolors.BOLD + global_variable.globalV.real_game.calc_total() + bcolors.ENDC
+            self.client_socket.send(msg.encode())
         except:
-            print("server row 126 ---client connection lost")
+            print("server client connection lost")
             return False
 
 if __name__ == '__main__':

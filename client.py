@@ -8,22 +8,21 @@ import socket, threading
 import struct
 import datetime, time
 import getch
-import multiprocessing
-
 import time
-host = '127.0.0.1'
+host_name = '127.0.0.1'
 
 # Define the port on which you want to connect
 port = 13117
 # port = 7002
-tuching = True
+type_on_keyboard = True
+
 def Main():
-    continueask = True
-    while continueask:
-        Tcp_Port = udpState()
-        if Tcp_Port != 0:
-            tcp_protocol(Tcp_Port)
-        global tuching
+    #still_play = True
+    #while still_play:
+    Tcp_Port = udp_protocol_on_client()
+    if Tcp_Port != 0:
+        tcp_protocol(Tcp_Port)
+    global tuching
         tuching = True
         # if (input("continue? y/n") == 'n'):
         #     continueask = False
@@ -33,7 +32,7 @@ def tcp_protocol(tcp_port):
     try:
         tcp_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         # connect to server on local computer
-        tcp_socket.connect((host, tcp_port))
+        tcp_socket.connect((host_name, tcp_port))
         # message you send to server
         team_name = "shay_hallel"
         # message sent to server
@@ -43,62 +42,56 @@ def tcp_protocol(tcp_port):
         try:
             first_msg_from_tcp_server = tcp_socket.recv(1024).decode()
             print(first_msg_from_tcp_server)
-            then = datetime.datetime.now() + datetime.timedelta(seconds=10)
+            stop = datetime.datetime.now() + datetime.timedelta(seconds=10)
             try:
-                while then > datetime.datetime.now():
-                    s = "c"
-                    tosend = getch.getch()
+                while stop > datetime.datetime.now():
+                    #s = "c"
+                    play_touch = getch.getch()
                     # print(input("type"))
-                    tcp_socket.send(s.encode())
+                    tcp_socket.send(play_touch.encode())
             except:
-                print("fail in getting tuch func")
+                print("fail on play game")
             try:
-                winner = tcp_socket.recv(1024).decode()
-                print(winner)
+                winner_message_from_server = tcp_socket.recv(1024).decode()
+                print(winner_message_from_server)
                 time.sleep(4)
             except:
-                print("client line 87 --- waiting for winner message")
+                print("client waiting for winner message")
             # real_game end
         except:
-            print("client line 90 --- problem while playing")
+            print("client problem while playing")
         # close the connection
         tcp_socket.close()
     except:
-        print("client line 94 --- connection error to tcp server")
+        print("client connection error to tcp server")
 
-def udpState():
+def udp_protocol_on_client():
+    port_of_tcp = -1
     udp_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM,socket.IPPROTO_UDP)
     udp_socket.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
-    TCP_PORT = 0
     udp_socket.bind(("",port))
     print("Client started, waiting for offer requests...")
     valid_message = True
     #udp_socket.settimeout(20)
     try:
         while valid_message:
-            buffer,address = udp_socket.recvfrom(1024)
-            unPackMsg = struct.unpack('I B H', buffer)
-            if unPackMsg[0] == 0xfeedbeef and unPackMsg[1] == 0x2:
+            buffer,address_server = udp_socket.recvfrom(1024)
+            udp_message = struct.unpack('I B H', buffer)
+            if udp_message[0] == 0xfeedbeef and udp_message[1] == 0x2:
                 valid_message = False
-            #test with our own server
-            print (address[0])
-            # if address[0] != '192.168.1.18':
-            #     print("not good offer")
-            #     valid_message = True
-            # else:
-            #     print("goood offer")
-            #     TCP_PORT = unPackMsg[2]
-            #     print(TCP_PORT)
-        TCP_PORT = unPackMsg[2]
-        global host
-        host = address[0]
-        #host = '127.0.0.1'
-        print(host)
-        print(f"Received offer from {host}, attempting to connect...")
+
+            print (address_server[0])
+
+        port_of_tcp = udp_message[2]
+        global host_name
+        host_name = address_server[0]
+        #host_name = '127.0.0.1'
+        #print(host_name)
+        print(f"Received offer from {host_name}, attempting to connect...")
     except:
         print("can't connet to server udp")
     udp_socket.close()
-    return TCP_PORT
+    return port_of_tcp
 
 if __name__ == '__main__':
     Main()

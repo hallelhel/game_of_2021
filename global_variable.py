@@ -1,17 +1,13 @@
 import socket, threading
-import datetime, time
-import udp_protocol
-import tcp_protocol
 from game import game
 
 class globalV:
     host_name = socket.gethostbyname(socket.gethostname())
     lock_msg = threading.Lock()
     udp_prot_server = 13117
-    tcp_prot_server = 7000
+    tcp_prot_server = 4500
     lock_class_game = threading.Lock()
     lock_until_end = threading.Lock()
-    all_players = []
     real_game = game()
 
     # def __init__(self):

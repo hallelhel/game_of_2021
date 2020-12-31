@@ -1,4 +1,4 @@
-import gobalVariable
+import global_variable
 
 class game():
     group1 = []
@@ -18,54 +18,50 @@ class game():
         self.scoreGroup2 = 0
         self.winner = ["", 0]
         self.loser = ["", 0]
-        self.num_of_char = 0
 
     def addNewGroup(self, client_name):
-        gobalVariable.globalV.lock_class_game.acquire()
+        global_variable.globalV.lock_class_game.acquire()
         if self.whichGroup:
             self.group1.append(client_name)
             self.whichGroup = False
-            gobalVariable.globalV.lock_class_game.release()
+            global_variable.globalV.lock_class_game.release()
             return "group1"
         else:
             self.group2.append(client_name)
             self.whichGroup = True
-            gobalVariable.globalV.lock_class_game.release()
+            global_variable.globalV.lock_class_game.release()
             return "group2"
 
     def get_group(self):
         message = "group1\n"
-        for i in self.group1:
-            message += i + "\n"
+        for client in self.group1:
+            message += client + "\n"
         message += "group2\n"
-        for i in self.group2:
-            message += i + "\n"
+        for client in self.group2:
+            message += client + "\n"
         return message
 
-    def sumScore(self, counter, group):
-        print(counter)
-        print(group)
-        gobalVariable.globalV.lock_class_game.acquire(True)
+    def sum_score(self, types, group):
+        global_variable.globalV.lock_class_game.acquire()
         if (group == "group1"):
-            self.scoreGroup1 += counter
-            print(str(self.scoreGroup1))
-        elif ("######"+group == "group2"):
-            self.scoreGroup2 += counter
-            print("######"+str(self.scoreGroup2))
-        self.num_of_char += counter
-        gobalVariable.globalV.lock_class_game.relaese()
+            self.scoreGroup1 += types
+            #print(str(self.scoreGroup1))
+        elif (group == "group2"):
+            self.scoreGroup2 += types
+            #print("######"+str(self.scoreGroup2))
+        global_variable.globalV.lock_class_game.relaese()
 
     def calc_total(self):
-        msg = "Game over\ngroup 1 get " + str(self.scoreGroup1) + " points.\n"
-        msg += "group 2 get " + str(self.scoreGroup2) + " points.\n"
-        msg += "The Winner is:\n"
-        if self.scoreGroup1 > self.scoreGroup2:
-            msg += str(self.group1)
-        elif self.scoreGroup2 > self.scoreGroup1:
-            msg += str(self.group2)
+        last_message = "Game over\ngroup 1 get " + str(self.scoreGroup1) + " points.\n"
+        last_message += "group 2 get " + str(self.scoreGroup2) + " points.\n"
 
+        if self.scoreGroup1 > self.scoreGroup2:
+            last_message += str(self.group1) + "you win the game:\n "
+            last_message += str(self.group2) + "nice try\n"
+        elif self.scoreGroup2 > self.scoreGroup1:
+            last_message += str(self.group2) + "you win the game:\n"
+            last_message += str(self.group1) + "nice try\n"
         else:
-            msg += "Its a teko"
-        msg += "\nnice round"
-        return msg
+            last_message += "Its a tekooooo next time try harder"
+        return last_message
 

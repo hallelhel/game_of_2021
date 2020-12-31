@@ -1,6 +1,6 @@
-import gobalVariable
+import global_variable
 import socket, threading
-import gobalVariable
+import global_variable
 import server
 class tcp_protocol(threading.Thread):
 
@@ -12,21 +12,21 @@ class tcp_protocol(threading.Thread):
 
     def tcp(self):
         try:
-            tcp_soc = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-            tcp_soc.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-            tcp_soc.bind((gobalVariable.globalV.host_name, gobalVariable.globalV.tcp_prot_server))
-            tcp_soc.settimeout(10)
+            tcp_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            tcp_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+            tcp_socket.bind((global_variable.globalV.host_name, global_variable.globalV.tcp_prot_server))
+            tcp_socket.settimeout(10)
             try:
                 while True:
-                    tcp_soc.listen(10)
-                    client_socket, client_address = tcp_soc.accept()
-                    print("tcp_protocol row 24 -- client try connect")
+                    tcp_socket.listen(10)
+                    client_socket, client_address = tcp_socket.accept()
+                    print("tcp_protocol client try connect")
 
-                    newthread = server.ClientThread(client_address, client_socket)
-                    newthread.start()
-                    # gobalVariable.globalV.all_players.append(newthread)
+                    client_thread = server.threads_client_on_server(client_address, client_socket)
+                    client_thread.start()
+                    # globalVariable.globalV.all_players.append(newthread)
             except:
-                tcp_soc.close()
-                print("tcp_protocol row 29(timeout-end tcp connect time)")
+                tcp_socket.close()
+                print("tcp_protocol end tcp connect")
         except:
-            print("tcp_protocol row 31 exception 2")
+            print("tcp_protocol exception")
