@@ -26,8 +26,8 @@ class udp_protocol(threading.Thread):
         # while timeout > time.time():
         then = datetime.datetime.now() + datetime.timedelta(seconds=10)
         while then > datetime.datetime.now():
-            # udp_socket.sendto(udp_offer_msg, ('172.1.0', UDP_PORT))
-            udp_socket.sendto(udp_offer_msg, ('<broadcast>', gobalVariable.globalV.udp_prot_server))
+            udp_socket.sendto(udp_offer_msg, ('172.1.0', gobalVariable.globalV.udp_prot_server))
+            # udp_socket.sendto(udp_offer_msg, ('<broadcast>', gobalVariable.globalV.udp_prot_server))
             time.sleep(1)
 
         # closing the udp thread after 10 seconds of offering messages.
