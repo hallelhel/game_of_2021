@@ -11,33 +11,29 @@ import getch
 import time
 host_name = '127.0.0.1'
 
-# Define the port on which you want to connect
+# port for game
 port = 13117
-# port = 7002
-type_on_keyboard = True
 
 def Main():
-    #still_play = True
-    #while still_play:
-    Tcp_Port = udp_protocol_on_client()
-    if Tcp_Port != 0:
-        tcp_protocol(Tcp_Port)
-    global tuching
-        tuching = True
-        # if (input("continue? y/n") == 'n'):
-        #     continueask = False
+    # client run for good
+    while True:
+        tcp_port = udp_protocol_on_client()
+        if tcp_port != -1:
+            # tcp connection
+            tcp_protocol(tcp_port)
 
 
 def tcp_protocol(tcp_port):
     try:
+        # define tcp socket
         tcp_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        # connect to server on local computer
+        # connect to server from the address you got from udp
         tcp_socket.connect((host_name, tcp_port))
-        # message you send to server
+        # teams name to send to server
         team_name = "shay_hallel"
         # message sent to server
         tcp_socket.send(team_name.encode())
-        # messaga received from server
+        # message received from server
         tcp_socket.settimeout(35)
         try:
             first_msg_from_tcp_server = tcp_socket.recv(1024).decode()
@@ -50,7 +46,7 @@ def tcp_protocol(tcp_port):
                     # print(input("type"))
                     tcp_socket.send(play_touch.encode())
             except:
-                print("fail on play game")
+                print("client row 49 -- fail on play game")
             try:
                 winner_message_from_server = tcp_socket.recv(1024).decode()
                 print(winner_message_from_server)
@@ -66,9 +62,11 @@ def tcp_protocol(tcp_port):
         print("client connection error to tcp server")
 
 def udp_protocol_on_client():
-    port_of_tcp = -1
+    port_of_tcp = -1 # to stop the tcp
+    # define udp socket
     udp_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM,socket.IPPROTO_UDP)
     udp_socket.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
+    # bind with the first port
     udp_socket.bind(("",port))
     print("Client started, waiting for offer requests...")
     valid_message = True
@@ -77,6 +75,7 @@ def udp_protocol_on_client():
         while valid_message:
             buffer,address_server = udp_socket.recvfrom(1024)
             udp_message = struct.unpack('I B H', buffer)
+            # chek ig the message in right type
             if udp_message[0] == 0xfeedbeef and udp_message[1] == 0x2:
                 valid_message = False
 
