@@ -1,16 +1,18 @@
 import global_variable
-
+'''
+    this class represents all the game functionality          
+'''
 class game():
     group1 = []
     group2 = []
     whichGroup = True
     scoreGroup1 = 0
     scoreGroup2 = 0
-    winner = ["", 0]
-    loser = ["", 0]
     num_of_char = 0
-
-    def goToZero(self):
+    '''
+        nullify variables foe new game             
+    '''
+    def init_game(self):
         self.group1 = []
         self.group2 = []
         self.whichGroup = True

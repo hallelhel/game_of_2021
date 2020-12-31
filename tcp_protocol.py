@@ -2,6 +2,11 @@ import global_variable
 import socket, threading
 import global_variable
 import server
+
+'''
+    this class for tcp connection - after udp connection success
+    to get the tcp address from server          
+'''
 class tcp_protocol(threading.Thread):
 
     def __init__(self):

@@ -3,7 +3,9 @@ import datetime, time
 import udp_protocol
 import tcp_protocol
 import global_variable
-
+'''
+    this class represent the server side       
+'''
 
 class bcolors:
     HEADER = '\033[95m'
@@ -41,7 +43,7 @@ def Main():
         print("real_game Finished")
         global_variable.globalV.lock_until_end.release()
         time.sleep(10)
-        global_variable.globalV.real_game.goToZero()
+        global_variable.globalV.real_game.init_game()
 
         # else:
         #     lock_msg.release()
@@ -50,7 +52,9 @@ def Main():
     # close all the all_players
     # reset real_game
 
-
+'''
+    this class represent the threads connection        
+'''
 class threads_client_on_server(threading.Thread):
     # groupName = ""
     # clientname = ""
@@ -63,7 +67,7 @@ class threads_client_on_server(threading.Thread):
         self.client_name = " "
 
     def run(self):
-        self.client_socket.settimeout(40)  # case no msg recived
+        self.client_socket.settimeout(40)  # case no message received
         data = self.client_socket.recv(2048)
         self.client_name = data.decode()
         self.group_name = global_variable.globalV.real_game.addNewGroup(self.client_name)

@@ -4,7 +4,10 @@ import socket
 import struct
 import datetime
 import global_variable
-
+'''
+    this class for the first connection - udp connection
+    to get the udp address from server          
+'''
 class udp_protocol(threading.Thread):
 
     def __init__(self):

@@ -13,7 +13,9 @@ host_name = '127.0.0.1'
 
 # port for game
 port = 13117
-
+'''
+    this class represent the client connection to server       
+'''
 def Main():
     # client run for good
     while True:
@@ -22,7 +24,9 @@ def Main():
             # tcp connection
             tcp_protocol(tcp_port)
 
-
+'''
+    this function creat tcp socket and communicate with tcp server          
+'''
 def tcp_protocol(tcp_port):
     try:
         # define tcp socket
@@ -46,7 +50,7 @@ def tcp_protocol(tcp_port):
                     #tcp_socket.send(s.encode()) #  comment
                     tcp_socket.send(play_touch.encode()) # relase comment
             except:
-                print("client row 49 -- fail on play game")
+                print("client row 49 -- hii wake up you didnt press")
             try:
                 winner_message_from_server = tcp_socket.recv(1024).decode()
                 print(winner_message_from_server)
@@ -60,7 +64,9 @@ def tcp_protocol(tcp_port):
         tcp_socket.close()
     except:
         print("client connection error to tcp server")
-
+'''
+    this function creat udp socket and communicate with udp server          
+'''
 def udp_protocol_on_client():
     port_of_tcp = -1 # to stop the tcp
     # define udp socket
