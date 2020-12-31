@@ -40,10 +40,10 @@ class game():
     get group1 - clients & group2 - clients              
     '''
     def get_group(self):
-        message = "group1\n"
+        message = "---group1---\n"
         for client in self.group1:
             message += client + "\n"
-        message += "group2\n"
+        message += "---group2---\n"
         for client in self.group2:
             message += client + "\n"
         return message
@@ -67,7 +67,7 @@ class game():
 
     def calc_total(self):
 
-        last_message = "###Game over###\ngroup 1 total types: " + str(self.scoreGroup1) + "\n"
+        last_message = "\n###Game over###\ngroup 1 total types: " + str(self.scoreGroup1) + "\n"
         last_message += "group 2 total types: " + str(self.scoreGroup2) + "\n"
 
         max_cuur_play = 0
@@ -95,7 +95,7 @@ class game():
 
         if max_cuur_play > global_variable.globalV.max_types_per_player:
             global_variable.globalV.max_types_per_player = max_cuur_play
-            last_message += "and you brake the record\n"
+            last_message += "you brake the record\n"
 
         return last_message
 

@@ -21,10 +21,6 @@ class bcolors:
 
 def Main():
     while True:
-        # global lock_msg
-        # global lock_until_end
-        # global real_game
-
         global_variable.globalV.lock_msg.acquire()
         global_variable.globalV.lock_until_end.acquire()
         udpthread = udp_protocol.udp_protocol()
@@ -36,21 +32,13 @@ def Main():
         tcpthread.join(10)
         udpthread.join(10)
         #print("udp/tcp thread finished")
-        # if (len(all_players) != 0):
-        # groupsMsg = game1.getGroupsMsg()
         global_variable.globalV.lock_msg.release()  # start real_game
         time.sleep(12)
-        print("real_game Finished")
+        #print("real_game Finished")
         global_variable.globalV.lock_until_end.release()
         time.sleep(10)
         global_variable.globalV.real_game.init_game()
 
-        # else:
-        #     lock_msg.release()
-        #     lock_until_end.release()
-
-    # close all the all_players
-    # reset real_game
 
 '''
     this class represent the threads connection        
@@ -91,9 +79,11 @@ class threads_client_on_server(threading.Thread):
     '''
     def message_to_start(self):
         try:
-            msg = '\033[95m' + 'welcome to the play of 2021.\n' + bcolors.ENDC + bcolors.HEADER + bcolors.OKBLUE + bcolors.OKCYAN  + bcolors.ENDC + '\n'
+            msg = '\033[95m' + 'welcome to the play of 2021.\n' + bcolors.ENDC + bcolors.BOLD + bcolors.OKBLUE + bcolors.OKCYAN + bcolors.ENDC + '\n'
+            # BOLD = HEADER
+
             groups_msg = '\033[94m' + global_variable.globalV.real_game.get_group() + bcolors.ENDC
-            start_msg = msg + groups_msg + bcolors.OKGREEN + '\nStart pressing keys on your keyboard as fast as you can!!\n' + bcolors.ENDC
+            start_msg = msg + groups_msg + bcolors.OKCYAN + '\nStart pressing keys on your keyboard as fast as you can\n' + bcolors.ENDC
             self.client_socket.send(start_msg.encode())
 
             counter_for_play = 0
@@ -107,8 +97,7 @@ class threads_client_on_server(threading.Thread):
             except:
                 print("server didnt get typing")
                 return False
-            print(counter_for_play)
-            print(self.group_name)
+
             global_variable.globalV.real_game.sum_score(counter_for_play, self.group_name)
 
         except:
@@ -118,7 +107,7 @@ class threads_client_on_server(threading.Thread):
     def message_score(self):
         try:
             # game over message
-            msg = bcolors.WARNING + bcolors.BOLD + global_variable.globalV.real_game.calc_total() + bcolors.ENDC
+            msg = bcolors.OKBLUE + bcolors.BOLD + global_variable.globalV.real_game.calc_total() + bcolors.ENDC
             self.client_socket.send(msg.encode())
         except:
             print("server client connection lost")

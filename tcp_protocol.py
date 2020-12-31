@@ -32,6 +32,6 @@ class tcp_protocol(threading.Thread):
                     # globalVariable.globalV.all_players.append(newthread)
             except:
                 tcp_socket.close()
-                print("tcp_protocol end tcp connect")
+                #print("tcp connection close")
         except:
-            print("tcp_protocol exception")
+            print("tcp protocol exception")
