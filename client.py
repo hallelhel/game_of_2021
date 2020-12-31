@@ -75,7 +75,7 @@ def udp_protocol_on_client():
         while valid_message:
             buffer,address_server = udp_socket.recvfrom(1024)
             udp_message = struct.unpack('I B H', buffer)
-            # chek ig the message in right type
+            # chek if the message in a right type
             if udp_message[0] == 0xfeedbeef and udp_message[1] == 0x2:
                 valid_message = False
 
@@ -85,7 +85,7 @@ def udp_protocol_on_client():
         global host_name
         host_name = address_server[0]
         #host_name = '127.0.0.1'
-        #print(host_name)
+
         print(f"Received offer from {host_name}, attempting to connect...")
     except:
         print("can't connet to server udp")
