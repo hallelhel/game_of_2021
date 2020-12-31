@@ -1,6 +1,8 @@
 import socket, threading
 from game import game
-
+'''
+    this class represent all global variables of the program        
+'''
 class globalV:
     host_name = socket.gethostbyname(socket.gethostname())
     lock_msg = threading.Lock()

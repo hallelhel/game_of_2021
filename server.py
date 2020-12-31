@@ -66,6 +66,9 @@ class threads_client_on_server(threading.Thread):
         self.group_name = " "
         self.client_name = " "
 
+    '''
+        run function for the threads      
+    '''
     def run(self):
         self.client_socket.settimeout(40)  # case no message received
         data = self.client_socket.recv(2048)
@@ -83,6 +86,9 @@ class threads_client_on_server(threading.Thread):
         if not val:
             return
 
+    '''
+          function initialize the game      
+    '''
     def message_to_start(self):
         try:
             msg = '\033[95m' + 'welcome to the play of 2021.\n' + bcolors.ENDC + bcolors.HEADER + bcolors.OKBLUE + bcolors.OKCYAN  + bcolors.ENDC + '\n'
@@ -111,6 +117,7 @@ class threads_client_on_server(threading.Thread):
 
     def message_score(self):
         try:
+            # game over message
             msg = bcolors.WARNING + bcolors.BOLD + global_variable.globalV.real_game.calc_total() + bcolors.ENDC
             self.client_socket.send(msg.encode())
         except:

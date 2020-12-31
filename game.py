@@ -67,8 +67,8 @@ class game():
 
     def calc_total(self):
 
-        last_message = "Game over\ngroup 1 get " + str(self.scoreGroup1) + " points.\n"
-        last_message += "group 2 get " + str(self.scoreGroup2) + " points.\n"
+        last_message = "###Game over###\ngroup 1 total types: " + str(self.scoreGroup1) + "\n"
+        last_message += "group 2 total types: " + str(self.scoreGroup2) + "\n"
 
         max_cuur_play = 0
         avg_grop1 = self.calc_avg(self.scoreGroup1, len(self.group1)) # already str
@@ -76,13 +76,13 @@ class game():
 
 
         if self.scoreGroup1 > self.scoreGroup2:
-            last_message += "group1 you win, yours average types per client was: " + str(avg_grop1) + ".\n"
-            last_message += "group2  nice try, yours average types per client was: " + str(avg_grop2) + ".\n"
+            last_message += "group 1 you win, yours average types per client was: " + str(avg_grop1) + ".\n"
+            last_message += "group 2  nice try, yours average types per client was: " + str(avg_grop2) + ".\n"
             max_cuur_play = avg_grop1
 
         elif self.scoreGroup2 > self.scoreGroup1:
-            last_message += "group2 you win the game, yours average types per client was: "+ str(avg_grop2) + "\n"
-            last_message += "group1 nice try, yours average types per client was: " + str(avg_grop1) + "\n"
+            last_message += "group 2 you win the game, yours average types per client was: "+ str(avg_grop2) + "\n"
+            last_message += "group 1 nice try, yours average types per client was: " + str(avg_grop1) + "\n"
             max_cuur_play = avg_grop2
 
         else:
@@ -90,12 +90,12 @@ class game():
             last_message += "yours average types per client was: " + str(avg_grop1) + "\n"
             max_cuur_play = avg_grop1
 
-        last_message += "a little interesting information: the average types for the\n"
-        last_message += "max types per client until this game:" + str(global_variable.globalV.max_types_per_player) + "\n"
+        last_message += "a little interesting information:\n"
+        last_message += "max types per client until this game " + str(global_variable.globalV.max_types_per_player) + "\n"
 
         if max_cuur_play > global_variable.globalV.max_types_per_player:
             global_variable.globalV.max_types_per_player = max_cuur_play
-            last_message += "and you brake the edge\n"
+            last_message += "and you brake the record\n"
 
         return last_message
 

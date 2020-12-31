@@ -85,7 +85,7 @@ def udp_protocol_on_client():
             if udp_message[0] == 0xfeedbeef and udp_message[1] == 0x2:
                 valid_message = False
 
-            print (address_server[0])
+            print(address_server[0] + "client -- udp")
 
         port_of_tcp = udp_message[2]
         global host_name
