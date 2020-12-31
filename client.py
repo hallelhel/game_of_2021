@@ -7,7 +7,7 @@ data from the network and print it onscreen
 import socket, threading
 import struct
 import datetime, time
-import getch
+import getch   #realese coment
 import time
 host_name = '127.0.0.1'
 
@@ -41,10 +41,10 @@ def tcp_protocol(tcp_port):
             stop = datetime.datetime.now() + datetime.timedelta(seconds=10)
             try:
                 while stop > datetime.datetime.now():
-                    #s = "c"
-                    play_touch = getch.getch()
-                    # print(input("type"))
-                    tcp_socket.send(play_touch.encode())
+                    # s = "c" #comment
+                    play_touch = getch.getch() # relase comment
+                    #tcp_socket.send(s.encode()) #  comment
+                    tcp_socket.send(play_touch.encode()) # relase comment
             except:
                 print("client row 49 -- fail on play game")
             try:
