@@ -7,7 +7,7 @@ from game import game
 class globalV:
     host_name = socket.gethostbyname(socket.gethostname())
     lock_msg = threading.Lock()
-    udp_prot_server = 7002
+    udp_prot_server = 13117
     tcp_prot_server = 7000
     lock_class_game = threading.Lock()
     lock_until_end = threading.Lock()

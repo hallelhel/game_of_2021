@@ -7,7 +7,7 @@ data from the network and print it onscreen
 import socket, threading
 import struct
 import datetime, time
-# import getch
+import getch
 import multiprocessing
 
 import time
@@ -15,7 +15,7 @@ host = '127.0.0.1'
 
 # Define the port on which you want to connect
 port = 13117
-port = 7002
+# port = 7002
 tuching = True
 def Main():
     continueask = True
@@ -47,8 +47,8 @@ def tcp_protocol(tcp_port):
             try:
                 while then > datetime.datetime.now():
                     s = "c"
-                    #tosend = getch.getch()
-                    print(input("type"))
+                    tosend = getch.getch()
+                    # print(input("type"))
                     tcp_socket.send(s.encode())
             except:
                 print("fail in getting tuch func")
